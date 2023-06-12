@@ -24,9 +24,11 @@ public:
 	void Draw();
 
 private:
+	float ballelSize = 100;
+	float ballelRad = 500;
 
-	static const int kBulletNum_ = 100;
-	const float airPower = 10;
+	static const int kBulletNum_ = 50;
+	float airPower = 1;
 	Vector3 firstVec{ 0, 0, airPower };
 
 	BULLET bullet_[kBulletNum_];

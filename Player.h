@@ -20,8 +20,6 @@ private:
 	Vector2Int pos_;
 	Vector2Int sentorPos_;
 
-	float ballelSize = 60;
-	float ballelRad = 32;
 
 
 	int size_;
