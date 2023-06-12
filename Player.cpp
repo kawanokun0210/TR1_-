@@ -43,6 +43,8 @@ void NoCustomGun::Update() {
 
 	player_->Draw();
 
+	Novice::ScreenPrintf(0, 0, "NoCustomGun");
+
 	if (preKeys_[DIK_RIGHT] && keys_[DIK_RIGHT] == 0) {	
 		player_->ChangeState(new CustomBarrelGun);
 	}
@@ -57,6 +59,8 @@ void CustomBarrelGun::Update() {
 	}
 
 	player_->SecondDraw();
+
+	Novice::ScreenPrintf(0, 0, "CustomBarrelGun");
 
 	if (preKeys_[DIK_RIGHT] && keys_[DIK_RIGHT] == 0) {
 		player_->ChangeState(new FullCustomGun);
@@ -73,6 +77,8 @@ void FullCustomGun::Update() {
 	}
 
 	player_->ThirdDraw();
+
+	Novice::ScreenPrintf(0, 0, "FullCustomGun");
 
 	if (preKeys_[DIK_RIGHT] && keys_[DIK_RIGHT] == 0) {
 		player_->ChangeState(new NoCustomGun);
