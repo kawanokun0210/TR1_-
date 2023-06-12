@@ -30,7 +30,6 @@ void Player::ChangeState(PlayerState* newPlayerState) {
 void PlayerState::SetKeys() {
 	memcpy(preKeys_, keys_, 256);
 	Novice::GetHitKeyStateAll(keys_);
-
 }
 
 
