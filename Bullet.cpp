@@ -21,7 +21,7 @@ void Bullet::Update(char* keys, char* preKeys, Vector2Int pos, int rundomPosX[],
 		if (keys[DIK_SPACE]) {
 			if (bullet_[i].isShot == false) {
 				if (coolTime_ <= 0) {
-					coolTime_ = 60;
+					coolTime_ = 300;
 					bullet_[i].pos.x = pos.x + rundomPosX[i];
 					bullet_[i].pos.y = pos.y + rundomPosY[i];
 					bullet_[i].isShot = true;
