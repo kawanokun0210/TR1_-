@@ -9,7 +9,7 @@ public:
 
 	void Initialize();
 
-	void Update(Bullet* bullet);
+	void Update();
 
 	void Draw();
 
@@ -20,6 +20,10 @@ private:
 	Vector2Int pos_;
 	Vector2Int sentorPos_;
 
-	int size_;
+	float ballelSize = 60;
+	float ballelRad = 32;
 
+
+	int size_;
+	Bullet* bullet_ = nullptr;
 };

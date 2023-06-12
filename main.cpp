@@ -33,7 +33,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		player->Update(bullet);
+		player->Update();
 
 		///
 		/// ↑更新処理ここまで
@@ -43,8 +43,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		//player->Draw();
-		bullet->Draw();
+		player->Draw();
 
 		///
 		/// ↑描画処理ここまで

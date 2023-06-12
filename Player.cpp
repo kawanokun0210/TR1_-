@@ -1,8 +1,5 @@
 #include "Player.h"
 #include <Novice.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 void Player::Initialize() {
 	pos_.x = 640;
@@ -11,21 +8,21 @@ void Player::Initialize() {
 	
 	sentorPos_.x = 640;
 	sentorPos_.y = 360;
-
-	time_t currentTime = time(nullptr);
-	srand(unsigned int(currentTime));
+	bullet_ =new Bullet();
+	bullet_->Initialize();
 
 }
 
-void Player::Update(Bullet* bullet) {
-
+void Player::Update() {
+	bullet_->Update();
 }
 
 void Player::Draw() {
 	
 	
-	Novice::DrawEllipse(pos_.x, pos_.y, size_, size_, 0.0f, WHITE, kFillModeWireFrame);
+	//Novice::DrawEllipse(pos_.x, pos_.y, size_, size_, 0.0f, WHITE, kFillModeWireFrame);
 	
-	Novice::DrawEllipse(sentorPos_.x, sentorPos_.y, 2, 2, 0.0f, WHITE, kFillModeSolid);
+//	Novice::DrawEllipse(sentorPos_.x, sentorPos_.y, 2, 2, 0.0f, WHITE, kFillModeSolid);
+	bullet_->Draw();
 
 }
