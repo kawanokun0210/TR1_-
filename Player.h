@@ -18,6 +18,7 @@ protected:
 	Bullet* bullet_ = nullptr;
 	char keys_[256];
 	char preKeys_[256];
+
 public:
 
 	virtual void SetPlayer(Player* player) { player_ = player; }
