@@ -10,26 +10,27 @@ void Bullet::Initialize() {
 		bullet_[i].isShot = false;
 		bullet_[i].shotCount = 0;
 	}
-	
+
 	coolTime_ = 0;
 
 }
 
-void Bullet::Update(char* keys, char* preKeys,Vector2Int pos, int rundomPosX[], int rundomPosY[]) {
+void Bullet::Update(char* keys, char* preKeys, Vector2Int pos, int rundomPosX[], int rundomPosY[]) {
 
 	for (int i = 0; i < kBulletNum_; i++) {
-		if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0) {
+		if (keys[DIK_SPACE]) {
 			if (bullet_[i].isShot == false) {
 				if (coolTime_ <= 0) {
-					coolTime_ = 25;
+					coolTime_ = 60;
+					bullet_[i].pos.x = pos.x + rundomPosX[i];
+					bullet_[i].pos.y = pos.y + rundomPosY[i];
+					bullet_[i].isShot = true;
+					bullet_[i].shotCount = 1;
 				}
-				bullet_[i].pos.x = pos.x + rundomPosX[i];
-				bullet_[i].pos.y = pos.y + rundomPosY[i];
-				bullet_[i].isShot = true;
-				bullet_[i].shotCount = 1;
 				if (bullet_[i].isShot == true) {
 					break;
 				}
+
 			}
 		}
 	}
