@@ -68,8 +68,8 @@ void CustomBarrelGun::Update() {
 void FullCustomGun::Update() {
 
 	for (int i = 0; i < 100; i++) {
-		rundomX[i] = rand() % 64 - 32;
-		rundomY[i] = rand() % 64 - 32;
+		rundomX[i] = rand() % 96 - 48;
+		rundomY[i] = rand() % 96 - 48;
 		bullet_->Update(keys_, preKeys_, player_->GetPos(), &rundomX[i], &rundomY[i]);
 	}
 
