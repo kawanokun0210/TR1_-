@@ -10,8 +10,6 @@ struct BULLET
 	Vector3 speed;
 };
 
-
-
 class Bullet
 {
 

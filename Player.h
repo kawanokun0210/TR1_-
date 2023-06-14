@@ -18,10 +18,11 @@ public:
 private:
 
 	Vector2Int pos_;
+
 	Vector2Int sentorPos_;
 
-
-
 	int size_;
+
 	Bullet* bullet_ = nullptr;
+
 };
