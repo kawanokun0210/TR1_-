@@ -100,10 +100,10 @@ void Bullet::Update() {
 			}
 
 		}
+
 		if (bullet_[i].isShot == false) {
 			bulletAfter[i].x = bullet_[i].pos.x;
 			bulletAfter[i].y = bullet_[i].pos.y;
-
 		}
  	}
 
