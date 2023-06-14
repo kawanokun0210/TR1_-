@@ -13,19 +13,13 @@ void Bullet::Initialize() {
 		bullet_[i].isShot = false;
 		bullet_[i].shotCount = 0;
 	}
-	
+
 	coolTime_ = 0;
 
 }
 
 void Bullet::Update() {
-	ImGui::Begin("Bullet");
 
-	ImGui::SliderFloat("bullelSize", &ballelSize, 1.0f, 1000.0f);
-	ImGui::SliderFloat("bullelRad", &ballelRad, 8.0f, 1000.0f);
-	ImGui::SliderFloat("airPower", &airPower, 1.0f, 100.0f);
-
-	ImGui::End();
 
 	memcpy(preKeys_, keys_, 256);
 	Novice::GetHitKeyStateAll(keys_);
@@ -47,7 +41,6 @@ void Bullet::Update() {
 				bullet_[i].speed.x = float(rand() % 20 - 10);
 				bullet_[i].speed.y = float(rand() % 20 - 10);
 				bullet_[i].speed.z = airPower;
-
 				bullet_[i].isShot = true;
 				//bullet_[i].shotCount = 1;
 				if (bullet_[i].isShot == true) {
@@ -67,31 +60,59 @@ void Bullet::Update() {
 	}
 
 
+
 	unsigned int currentTime = unsigned int(time(nullptr));
 	srand(currentTime);
-	
+
 
 	for (int i = 0; i < kBulletNum_; i++) {
 		if (bullet_[i].isShot == true) {
 
+
 			bullet_[i].pos.x += bullet_[i].speed.x;
 			bullet_[i].pos.y += bullet_[i].speed.y;
+			float masa = -(bullet_[i].speed.z / 10);
 			bullet_[i].pos.z += bullet_[i].speed.z;
+			bullet_[i].speed.y -= 0.01f;
 
-			if(bullet_[i].pos.z < 0) {
+			if (bullet_[i].pos.z < 0) {
 
 				Vector3 bullelPos = { 640, 360, 0 };
 				float dis = (bullelPos.x - bullet_[i].pos.x) * (bullelPos.x - bullet_[i].pos.x) + (bullelPos.y - bullet_[i].pos.y) * (bullelPos.y - bullet_[i].pos.y);
 
+
+				for (int j = 0; j < kBulletNum_; j++) {
+					
+					float disb2b = (bullet_[i].pos.x - bullet_[j].pos.x) * (bullet_[i].pos.x - bullet_[j].pos.x) + (bullet_[i].pos.x - bullet_[j].pos.y) * (bullet_[i].pos.x - bullet_[j].pos.y);
+					if (disb2b >= bullet_[i].size.x + bullet_[j].size.x) {
+						bullet_[i].pos.x *= -1;
+						bullet_[i].pos.y *= -1;
+						if (bullet_[i].speed.z > 1.0f) {
+							bullet_[i].speed.z -= 0.01f;
+						}
+						else {
+							bullet_[i].speed.z = 1.0f;
+						}
+						bullet_[i].speed.z += masa;
+
+
+					}
+				}
+
+
+
+
 				if (dis >= bullet_[i].size.x + ballelRad) {
 					bullet_[i].pos.x *= -1;
 					bullet_[i].pos.y *= -1;
-					if (airPower > 1.0f) {
-						airPower -= 0.01f;
+					if (bullet_[i].speed.z > 1.0f) {
+						bullet_[i].speed.z -= 0.01f;
 					}
 					else {
-						airPower = 1.0f;
+						bullet_[i].speed.z = 1.0f;
 					}
+					bullet_[i].speed.z += masa;
+
 				}
 			}
 
@@ -105,11 +126,18 @@ void Bullet::Update() {
 			bulletAfter[i].x = bullet_[i].pos.x;
 			bulletAfter[i].y = bullet_[i].pos.y;
 		}
- 	}
+	}
 
 
+	ImGui::Begin("Bullet");
 
+	ImGui::SliderFloat("bullelSize", &ballelSize, 1.0f, 1000.0f);
+	ImGui::SliderFloat("bullelRad", &ballelRad, 8.0f, 1000.0f);
+	ImGui::SliderFloat("airPower", &airPower, 1.0f, 100.0f);
+	ImGui::SliderFloat("buPos", &bullet_[0].pos.z, 8.0f, 1000.0f);
+	ImGui::SliderFloat("buSpr", &bullet_[0].speed.z, 8.0f, 1000.0f);
 
+	ImGui::End();
 }
 
 void Bullet::Draw() {

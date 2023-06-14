@@ -27,7 +27,6 @@ private:
 
 	static const int kBulletNum_ = 50;
 	float airPower = 1;
-	Vector3 firstVec{ 0, 0, airPower };
 
 	BULLET bullet_[kBulletNum_];
 
