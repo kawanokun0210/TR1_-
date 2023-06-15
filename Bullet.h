@@ -23,7 +23,7 @@ public:
 
 private:
 	float ballelSize = 100;
-	float ballelRad = 500;
+	float ballelRad = 10;
 
 	static const int kBulletNum_ = 50;
 	float airPower = 1;

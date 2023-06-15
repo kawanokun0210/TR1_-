@@ -20,6 +20,8 @@ void Bullet::Initialize() {
 
 void Bullet::Update() {
 
+	unsigned int currentTime = unsigned int(time(nullptr));
+	srand(currentTime);
 
 	memcpy(preKeys_, keys_, 256);
 	Novice::GetHitKeyStateAll(keys_);
@@ -58,11 +60,6 @@ void Bullet::Update() {
 			bullet_[i].isShot = false;
 		}
 	}
-
-
-
-	unsigned int currentTime = unsigned int(time(nullptr));
-	srand(currentTime);
 
 
 	for (int i = 0; i < kBulletNum_; i++) {
@@ -116,7 +113,7 @@ void Bullet::Update() {
 				}
 			}
 
-			if (bullet_[i].pos.z > 40) {
+			if (bullet_[i].pos.z > 20) {
 				bullet_[i].isShot = false;
 			}
 
@@ -131,12 +128,10 @@ void Bullet::Update() {
 
 	ImGui::Begin("Bullet");
 
-	ImGui::SliderFloat("bullelSize", &ballelSize, 1.0f, 1000.0f);
-	ImGui::SliderFloat("bullelRad", &ballelRad, 8.0f, 1000.0f);
+	ImGui::SliderFloat("bullelSize", &ballelSize, 1.0f, 100.0f);
+	ImGui::SliderFloat("bullelRad", &ballelRad, 8.0f, 100.0f);
 	ImGui::SliderFloat("airPower", &airPower, 1.0f, 100.0f);
-	ImGui::SliderFloat("buPos", &bullet_[0].pos.z, 8.0f, 1000.0f);
-	ImGui::SliderFloat("buSpr", &bullet_[0].speed.z, 8.0f, 1000.0f);
-
+	
 	ImGui::End();
 }
 
