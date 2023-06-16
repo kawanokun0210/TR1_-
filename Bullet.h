@@ -22,6 +22,7 @@ public:
 	void Draw();
 
 private:
+
 	float ballelSize = 100;
 	float ballelRad = 30;
 
