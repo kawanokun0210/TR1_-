@@ -1,4 +1,4 @@
-#include "Bullet.h"
+﻿#include "Bullet.h"
 #include <Novice.h>
 #include <stdlib.h>
 #include <time.h>
@@ -129,7 +129,7 @@ void Bullet::Update() {
 	ImGui::Begin("Bullet");
 
 	ImGui::SliderFloat("bullelSize", &ballelSize, 1.0f, 100.0f);
-	ImGui::SliderFloat("bullelRad", &ballelRad, 8.0f, 100.0f);
+	ImGui::SliderFloat("bullelRad", &ballelRad, 30.0f, 100.0f);
 	ImGui::SliderFloat("airPower", &airPower, 1.0f, 100.0f);
 	
 	ImGui::End();
