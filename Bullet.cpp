@@ -71,7 +71,7 @@ void Bullet::Update() {
 			bullet_[i].speed.y += 0.01f;
 
 			//摩擦
-			float masa = -(bullet_[i].speed.z / 10);
+			float friction = -(bullet_[i].speed.z / 10);
 			if (bullet_[i].pos.z < 0) {
 
 				//仮で中心の値を設定
@@ -94,7 +94,7 @@ void Bullet::Update() {
 						bullet_[i].speed.z = 1.0f;
 					}
 					//摩擦分を反映
-					bullet_[i].speed.z += masa;
+					bullet_[i].speed.z += friction;
 
 				}
 				for (int j = 0; j < kBulletNum_; j++) {
@@ -115,7 +115,7 @@ void Bullet::Update() {
 							bullet_[i].speed.z = 1.0f;
 						}
 						//摩擦分を反映
-						bullet_[i].speed.z += masa;
+						bullet_[i].speed.z += friction;
 					}
 				}
 			}
