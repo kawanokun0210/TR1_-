@@ -35,6 +35,8 @@ private:
 
 	int coolTime_;
 
+	int wind = 0;
+
 	char keys_[256];
 	char preKeys_[256];
 };
