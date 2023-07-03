@@ -33,6 +33,8 @@ void PlayerState::SetKeys() {
 void ShotGun::Update() {
 	bullet_->ShotGunUpdate();
 
+	bullet_->Draw();
+
 	if (preKeys_[DIK_RIGHT] && keys_[DIK_RIGHT] == 0) {
 		player_->ChangeState(new Rifle);
 	}
@@ -49,6 +51,7 @@ void Rifle::Update() {
 void Pistol::Update() {
 	bullet_->PistolUpdate();
 
+	bullet_->PistolDraw();
 	if (preKeys_[DIK_RIGHT] && keys_[DIK_RIGHT] == 0) {
 		player_->ChangeState(new ShotGun);
 	}

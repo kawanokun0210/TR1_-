@@ -43,7 +43,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		bullet->Draw();
+		//bullet->Draw();
 
 		///
 		/// ↑描画処理ここまで

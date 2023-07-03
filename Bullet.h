@@ -25,6 +25,8 @@ public:
 
 	void Draw();
 
+	void PistolDraw();
+
 private:
 
 	float ballelSize = 100;
