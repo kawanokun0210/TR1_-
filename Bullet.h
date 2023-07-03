@@ -17,7 +17,11 @@ public:
 
 	void Initialize();
 
-	void Update();
+	void ShotGunUpdate();
+
+	void RifleUpdate();
+
+	void PistolUpdate();
 
 	void Draw();
 

@@ -20,7 +20,7 @@ void Bullet::Initialize() {
 
 }
 
-void Bullet::Update() {
+void Bullet::ShotGunUpdate() {
 
 	unsigned int currentTime = unsigned int(time(nullptr));
 	srand(currentTime);
@@ -44,7 +44,7 @@ void Bullet::Update() {
 				bullet_[i].speed.y = float(rand() % 20 - 10);
 				bullet_[i].speed.z = airPower;
 				bullet_[i].isShot = true;
-				//bullet_[i].shotCount = 1;
+				bullet_[i].shotCount = 1;
 				if (bullet_[i].isShot == true) {
 				}
 			}
@@ -57,7 +57,7 @@ void Bullet::Update() {
 
 	for (int i = 0; i < kBulletNum_; i++) {
 		if (keys_[DIK_RETURN] && preKeys_[DIK_RETURN]) {
-			bullet_[i].isShot = false;
+			bullet_[i].shotCount = 0;
 		}
 	}
 
@@ -138,6 +138,266 @@ void Bullet::Update() {
 
 	ImGui::Begin("Bullet");
 
+	ImGui::Text("shotGun");
+	ImGui::Text("RIGHT ARROW CHANGE RIFLE");
+	ImGui::SliderFloat("bullelSize", &ballelSize, 1.0f, 100.0f);
+	ImGui::SliderFloat("bullelRad", &ballelRad, 30.0f, 100.0f);
+	ImGui::SliderFloat("airPower", &airPower, 1.0f, 100.0f);
+	ImGui::SliderFloat("gravity", &gravity, 0.00f, 0.50f);
+	ImGui::SliderFloat("distance", &distance, 0.00f, 100.0f);
+
+	ImGui::End();
+}
+
+void Bullet::RifleUpdate() {
+	unsigned int currentTime = unsigned int(time(nullptr));
+	srand(currentTime);
+
+	memcpy(preKeys_, keys_, 256);
+	Novice::GetHitKeyStateAll(keys_);
+
+	for (int i = 0; i < kBulletNum_; i++) {
+		if (keys_[DIK_SPACE]) {
+			if (bullet_[i].isShot == false) {
+				if (coolTime_ <= 0) {
+					coolTime_ = 25;
+
+					//初期のポジション
+					bullet_[i].pos.x = 640.0f;
+					bullet_[i].pos.y = 360.0f;
+					bullet_[i].pos.z = -ballelSize;
+
+					//初速(x,yはランダムに、zは空気の圧力で)
+					bullet_[i].speed.x = float(rand() % 20 - 10);
+					bullet_[i].speed.y = float(rand() % 20 - 10);
+					bullet_[i].speed.z = airPower;
+					bullet_[i].isShot = true;
+					bullet_[i].shotCount = 1;
+				}
+				if (bullet_[i].isShot == true) {
+					break;
+				}
+			}
+		}
+	}
+
+	if (coolTime_ >= 0) {
+		coolTime_--;
+	}
+
+	for (int i = 0; i < kBulletNum_; i++) {
+		if (keys_[DIK_RETURN] && preKeys_[DIK_RETURN]) {
+			bullet_[i].isShot = false;
+		}
+	}
+
+	for (int i = 0; i < kBulletNum_; i++) {
+		if (bullet_[i].isShot == true) {
+
+			//isShotがtrueの間は速さを足していく
+			bullet_[i].pos.x += bullet_[i].speed.x;
+			bullet_[i].pos.y += bullet_[i].speed.y;
+			bullet_[i].pos.z += bullet_[i].speed.z;
+
+			//スピードyのみ重力で少しずつ下に行くように
+			bullet_[i].speed.y += gravity;
+
+			//摩擦
+			float masa = -(bullet_[i].speed.z / 10);
+			if (bullet_[i].pos.z < 0) {
+
+				//仮で中心の値を設定
+				Vector3 bullelPos = { 640, 360, 0 };
+				//ノズル内と弾との当たり判定
+				float dis = (bullelPos.x - bullet_[i].pos.x) * (bullelPos.x - bullet_[i].pos.x) + (bullelPos.y - bullet_[i].pos.y) * (bullelPos.y - bullet_[i].pos.y);
+
+				//もしノズル内と弾があたったら
+				if (dis >= bullet_[i].size.x + ballelRad) {
+					//跳ね返る
+					bullet_[i].pos.x *= -1;
+					bullet_[i].pos.y *= -1;
+					//もしスピードzが1.0fより大きいなら
+					if (bullet_[i].speed.z > 1.0f) {
+						//少しずつ減少する
+						bullet_[i].speed.z -= 0.01f;
+					}
+					else {
+						//そうでなければ1.0fで固定
+						bullet_[i].speed.z = 1.0f;
+					}
+					//摩擦分を反映
+					bullet_[i].speed.z += masa;
+
+				}
+				for (int j = 0; j < kBulletNum_; j++) {
+					//弾同士の当たり判定	
+					float disb2b = (bullet_[i].pos.x - bullet_[j].pos.x) * (bullet_[i].pos.x - bullet_[j].pos.x) + (bullet_[i].pos.x - bullet_[j].pos.y) * (bullet_[i].pos.x - bullet_[j].pos.y);
+					if (disb2b >= bullet_[i].size.x + bullet_[j].size.x) {
+						//もし弾同士であたったら
+						//跳ね返る
+						bullet_[i].speed.x *= -1;
+						bullet_[i].speed.y *= -1;
+						//もしスピードzが1.0fより大きいなら
+						if (bullet_[i].speed.z > 1.0f) {
+							//少しずつ減少する
+							bullet_[i].speed.z -= 0.01f;
+						}
+						else {
+							//そうでなければ1.0fで固定
+							bullet_[i].speed.z = 1.0f;
+						}
+						//摩擦分を反映
+						bullet_[i].speed.z += masa;
+					}
+				}
+			}
+			//もし弾がz20(仮で的の位置)に当たったら
+			if (bullet_[i].pos.z > distance) {
+				//falseに
+				bullet_[i].isShot = false;
+			}
+		}
+		//もしisShotがfalseなら
+		if (bullet_[i].isShot == false) {
+			//弾痕に代入
+			bulletAfter[i].x = bullet_[i].pos.x;
+			bulletAfter[i].y = bullet_[i].pos.y;
+		}
+	}
+
+
+	ImGui::Begin("Bullet");
+
+	ImGui::Text("rifle");
+	ImGui::Text("RIGHT ARROW CHANGE PISTOL");
+	ImGui::SliderFloat("bullelSize", &ballelSize, 1.0f, 100.0f);
+	ImGui::SliderFloat("bullelRad", &ballelRad, 30.0f, 100.0f);
+	ImGui::SliderFloat("airPower", &airPower, 1.0f, 100.0f);
+	ImGui::SliderFloat("gravity", &gravity, 0.00f, 0.50f);
+	ImGui::SliderFloat("distance", &distance, 0.00f, 100.0f);
+
+	ImGui::End();
+}
+
+void Bullet::PistolUpdate() {
+	unsigned int currentTime = unsigned int(time(nullptr));
+	srand(currentTime);
+
+	memcpy(preKeys_, keys_, 256);
+	Novice::GetHitKeyStateAll(keys_);
+
+	for (int i = 0; i < kBulletNum_; i++) {
+		if (keys_[DIK_SPACE] && !preKeys_[DIK_SPACE]) {
+			if (bullet_[i].isShot == false) {
+				if (coolTime_ <= 0) {
+					coolTime_ = 25;
+				}
+				//初期のポジション
+				bullet_[i].pos.x = 640.0f;
+				bullet_[i].pos.y = 360.0f;
+				bullet_[i].pos.z = -ballelSize;
+
+				//初速(x,yはランダムに、zは空気の圧力で)
+				bullet_[i].speed.x = float(rand() % 20 - 10);
+				bullet_[i].speed.y = float(rand() % 20 - 10);
+				bullet_[i].speed.z = airPower;
+				bullet_[i].isShot = true;
+				//bullet_[i].shotCount = 1;
+				if (bullet_[i].isShot == true) {
+				}
+			}
+		}
+	}
+
+	if (coolTime_ >= 0) {
+		coolTime_--;
+	}
+
+	for (int i = 0; i < kBulletNum_; i++) {
+		if (keys_[DIK_RETURN] && preKeys_[DIK_RETURN]) {
+			bullet_[i].isShot = false;
+		}
+	}
+
+	for (int i = 0; i < kBulletNum_; i++) {
+		if (bullet_[i].isShot == true) {
+
+			//isShotがtrueの間は速さを足していく
+			bullet_[i].pos.x += bullet_[i].speed.x;
+			bullet_[i].pos.y += bullet_[i].speed.y;
+			bullet_[i].pos.z += bullet_[i].speed.z;
+
+			//スピードyのみ重力で少しずつ下に行くように
+			bullet_[i].speed.y += gravity;
+
+			//摩擦
+			float masa = -(bullet_[i].speed.z / 10);
+			if (bullet_[i].pos.z < 0) {
+
+				//仮で中心の値を設定
+				Vector3 bullelPos = { 640, 360, 0 };
+				//ノズル内と弾との当たり判定
+				float dis = (bullelPos.x - bullet_[i].pos.x) * (bullelPos.x - bullet_[i].pos.x) + (bullelPos.y - bullet_[i].pos.y) * (bullelPos.y - bullet_[i].pos.y);
+
+				//もしノズル内と弾があたったら
+				if (dis >= bullet_[i].size.x + ballelRad) {
+					//跳ね返る
+					bullet_[i].pos.x *= -1;
+					bullet_[i].pos.y *= -1;
+					//もしスピードzが1.0fより大きいなら
+					if (bullet_[i].speed.z > 1.0f) {
+						//少しずつ減少する
+						bullet_[i].speed.z -= 0.01f;
+					}
+					else {
+						//そうでなければ1.0fで固定
+						bullet_[i].speed.z = 1.0f;
+					}
+					//摩擦分を反映
+					bullet_[i].speed.z += masa;
+
+				}
+				for (int j = 0; j < kBulletNum_; j++) {
+					//弾同士の当たり判定	
+					float disb2b = (bullet_[i].pos.x - bullet_[j].pos.x) * (bullet_[i].pos.x - bullet_[j].pos.x) + (bullet_[i].pos.x - bullet_[j].pos.y) * (bullet_[i].pos.x - bullet_[j].pos.y);
+					if (disb2b >= bullet_[i].size.x + bullet_[j].size.x) {
+						//もし弾同士であたったら
+						//跳ね返る
+						bullet_[i].speed.x *= -1;
+						bullet_[i].speed.y *= -1;
+						//もしスピードzが1.0fより大きいなら
+						if (bullet_[i].speed.z > 1.0f) {
+							//少しずつ減少する
+							bullet_[i].speed.z -= 0.01f;
+						}
+						else {
+							//そうでなければ1.0fで固定
+							bullet_[i].speed.z = 1.0f;
+						}
+						//摩擦分を反映
+						bullet_[i].speed.z += masa;
+					}
+				}
+			}
+			//もし弾がz20(仮で的の位置)に当たったら
+			if (bullet_[i].pos.z > distance) {
+				//falseに
+				bullet_[i].isShot = false;
+			}
+		}
+		//もしisShotがfalseなら
+		if (bullet_[i].isShot == false) {
+			//弾痕に代入
+			bulletAfter[i].x = bullet_[i].pos.x;
+			bulletAfter[i].y = bullet_[i].pos.y;
+		}
+	}
+
+
+	ImGui::Begin("Bullet");
+
+	ImGui::Text("pistol");
+	ImGui::Text("RIGHT ARROW CHANGE SHOTGUN");
 	ImGui::SliderFloat("bullelSize", &ballelSize, 1.0f, 100.0f);
 	ImGui::SliderFloat("bullelRad", &ballelRad, 30.0f, 100.0f);
 	ImGui::SliderFloat("airPower", &airPower, 1.0f, 100.0f);
@@ -154,8 +414,10 @@ void Bullet::Draw() {
 			Novice::DrawEllipse(int(bullet_[i].pos.x), int(bullet_[i].pos.y), int(bullet_[i].size.x), int(bullet_[i].size.y), 0.0f, RED, kFillModeSolid);
 		}
 		if (bullet_[i].isShot == false) {
-			//弾痕の描画
-			Novice::DrawEllipse(int(bulletAfter[i].x), int(bulletAfter[i].y), 3, 3, 0.0f, RED, kFillModeSolid);
+			if (bullet_[i].shotCount == 1) {
+				//弾痕の描画
+				Novice::DrawEllipse(int(bulletAfter[i].x), int(bulletAfter[i].y), 3, 3, 0.0f, RED, kFillModeSolid);
+			}
 		}
 	}
 }
