@@ -35,6 +35,10 @@ private:
 
 	int coolTime_;
 
+	float glabity;
+
+	float distance;
+
 	char keys_[256];
 	char preKeys_[256];
 };

@@ -14,6 +14,8 @@ void Bullet::Initialize() {
 		bullet_[i].shotCount = 0;
 	}
 
+	glabity = 0;
+	distance = 20;
 	coolTime_ = 0;
 
 }
@@ -68,7 +70,7 @@ void Bullet::Update() {
 			bullet_[i].pos.z += bullet_[i].speed.z;
 		
 			//スピードyのみ重力で少しずつ下に行くように
-			bullet_[i].speed.y += 0.01f;
+			bullet_[i].speed.y += glabity;
 
 			//摩擦
 			float masa = -(bullet_[i].speed.z / 10);
@@ -120,7 +122,7 @@ void Bullet::Update() {
 				}
 			}
 			//もし弾がz20(仮で的の位置)に当たったら
-			if (bullet_[i].pos.z > 20) {
+			if (bullet_[i].pos.z > distance) {
 				//falseに
 				bullet_[i].isShot = false;
 			}
@@ -139,6 +141,8 @@ void Bullet::Update() {
 	ImGui::SliderFloat("bullelSize", &ballelSize, 1.0f, 100.0f);
 	ImGui::SliderFloat("bullelRad", &ballelRad, 30.0f, 100.0f);
 	ImGui::SliderFloat("airPower", &airPower, 1.0f, 100.0f);
+	ImGui::SliderFloat("glabity", &glabity, 0.00f, 0.50f);
+	ImGui::SliderFloat("distance", &distance, 0.00f, 100.0f);
 	
 	ImGui::End();
 }
