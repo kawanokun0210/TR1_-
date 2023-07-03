@@ -35,7 +35,7 @@ private:
 
 	int coolTime_;
 
-	float glabity;
+	float gravity;
 
 	float distance;
 
